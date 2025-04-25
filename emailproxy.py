@@ -1201,6 +1201,11 @@ class OAuth2Helper:
             elif oauth2_flow == 'password':
                 params['username'] = username
                 params['password'] = password
+                resource = AppConfig.get_option_with_catch_all_fallback(
+                    AppConfig.get(), username, 'oauth2_resource', fallback=None)
+                if resource:
+                    params.pop('scope', None)
+                    params['resource'] = resource
             if not redirect_uri:
                 del params['redirect_uri']  # redirect_uri is not typically required in non-code flows; remove if empty
 
